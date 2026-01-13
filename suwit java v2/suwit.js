@@ -34,20 +34,20 @@ function compPikir() {
 }
 
 const pilihan = document.querySelectorAll('li img');
-pilihan.forEach(function(e){
-    e.addEventListener('click', function(){
+pilihan.forEach(function(pil){
+    pil.addEventListener('click', function(){
         const pilihanComputer = pilihComputer();
-    const pilihanPlayer = e.className;
-    const hasilAkhir = hasil(pilihanComputer, pilihanPlayer);
+    const pilihanPlayer = pil.className;
+    const hasil = hasil(pilihanComputer, pilihanPlayer);
     
     compPikir();
 
     setTimeout(function(){
-    const imgComp = document.querySelector('.img-komputer');
-    imgComp.setAttribute('src','img/'+pilihanComputer+'.png');
+    const imgComputer = document.querySelector('.img-komputer');
+    imgComputer.setAttribute('src','img/'+pilihanComputer+'.png');
 
-    const tampilHasil = document.querySelector('.info');
-    tampilHasil.innerHTML = hasilAkhir;
+    const info = document.querySelector('.info');
+    info.innerHTML = hasil;
     }, 1000)
     
     });
@@ -62,7 +62,7 @@ pilihan.forEach(function(e){
 //     const hasilAkhir = hasil(pilihanComputer, pilihanPlayer);
     
 //     const imgComp = document.querySelector('.img-komputer');
-//     imgComp.setAttribute('src','img/'+pilihanComputer+'.png');
+//     imgComp.setAttribute('src','img/'+ pilihanComputer +'.png');
 
 //     const tampilHasil = document.querySelector('.info');
 //     tampilHasil.innerHTML = hasilAkhir;
