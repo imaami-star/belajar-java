@@ -28,6 +28,7 @@
 
             //alert todo jika belum terisi 
             const value = content.value
+            const deskrip = deskripsi.value
             if (!value) {
                 alert(" To do list harus di isi!")
                 return
@@ -37,30 +38,27 @@
             let todos = localStorage.getItem('todo'); // todo itu nama localstorage nya
             todos = todos ? JSON.parse(todos) : []
 
-            todos.push(value)
+            todos.push({value, deskrip})
 
             //simpan array yang baru ke di localstorage
             localStorage.setItem('todo', JSON.stringify(todos))
             console.log(todos)
             renderTodos() // manggil function
             content.value = ''
-            deskripsi.value = ''
+            deskrip.value = ''
 
         })
 
-        //render semua todo yang tersimpan di localstorage
+        //render semua todo yang tersimpan di local storage
         function renderTodos() {
             const stored = localStorage.getItem('todo')
             const arr = stored ? JSON.parse(stored) : []
             todolist.innerHTML = ''
             arr.forEach(function (t, idx) {
                 const li = document.createElement('li')
-
-                const sDeskrip = document.createElement('span')
-                sDeskrip.textContent = t
-
+        
                 const span = document.createElement('span')
-                span.textContent = t
+                span.textContent = t.value + " " + t.deskrip
 
                 //tombol edit 
                 const editBtn = document.createElement('button')
@@ -71,11 +69,11 @@
                 editBtn.addEventListener('click', function () {
                     const input = document.createElement('input')
                     input.type = 'text'
-                    input.value = t.input
+                    input.value = t.value 
 
-                    const textarea = document.createElement('textarea')
-                    textarea.type = 'textarea'
-                    textarea.value = t.deskripsi
+                    const deskripsi = document.createElement('textarea')
+                    deskripsi.type = 'text'
+                    deskripsi.deskrip = t.deskrip
 
 
                     // Tombol save button 
@@ -134,7 +132,7 @@
 
                     li.innerHTML = '';
                     li.appendChild(input)
-                    
+                    li.appendChild(deskripsi)
                     li.appendChild(svBtn)
                     li.appendChild(cancelBtn)
                     input.focus(); // bisa langsung isi ketika kita ingin mengetik 
@@ -155,7 +153,7 @@
                 })
 
                 li.appendChild(span)
-                // li.appendChild(sDeskrip)
+                // li.appendChild(span)
                 li.appendChild(editBtn)
                 li.appendChild(deleteBtn)
                 todolist.appendChild(li)
