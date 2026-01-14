@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do</title>
+</head>
+
+<body>
+    <form action="to-do list" id="form-todo">
+        <input type="text" name="content" id="content" placeholder="nama kegiatan">
+        <textarea type="text" name="deskripsi" id="deskripsi" placeholder="deskripsi kegiatan"></textarea>
+        <button type="submit" id="todo-submit">Submit</button>
+
+    </form>
+    <ul id="todo-list">
+
+    </ul>
+    <script>
+        const form = document.getElementById('form-todo')
+        const content = document.getElementById('content')
+        const deskripsi = document.getElementById('deskripsi')
+        const todolist = document.getElementById('todo-list')
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault()
+
+            //alert todo jika belum terisi 
+            const value = content.value
+            if (!value) {
+                alert(" To do list harus di isi!")
+                return
+            }
+            
+            //simpan ke localstorage
+            let todos = localStorage.getItem('todo'); // todo itu nama localstorage nya
+            todos = todos ? JSON.parse(todos) : []
+
+            todos.push(value)
+
+            //simpan array yang baru ke di localstorage
+            localStorage.setItem('todo', JSON.stringify(todos))
+            console.log(todos)
+            renderTodos() // manggil function
+            content.value = ''
+            deskripsi.value = ''
+
+        })
+
+        //render semua todo yang tersimpan di localstorage
+        function renderTodos() {
+            const stored = localStorage.getItem('todo')
+            const arr = stored ? JSON.parse(stored) : []
+            todolist.innerHTML = ''
+            arr.forEach(function (t, idx) {
+                const li = document.createElement('li')
+
+                const sDeskrip = document.createElement('span')
+                sDeskrip.textContent = t
+
+                const span = document.createElement('span')
+                span.textContent = t
+
+                //tombol edit 
+                const editBtn = document.createElement('button')
+                editBtn.type = 'button'
+                editBtn.textContent = 'Edit'
+
+                //Edit mode 
+                editBtn.addEventListener('click', function () {
+                    const input = document.createElement('input')
+                    input.type = 'text'
+                    input.value = t.input
+
+                    const textarea = document.createElement('textarea')
+                    textarea.type = 'textarea'
+                    textarea.value = t.deskripsi
+
+
+                    // Tombol save button 
+                    const svBtn = document.createElement('button');
+                    svBtn.type = 'button';
+                    svBtn.textContent = 'Save';
+
+                    // Tombol cancel 
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.type = 'button';
+                    cancelBtn.textContent = 'cancel';
+
+                    //klik manual button cancel 
+                    cancelBtn.addEventListener('click', function () {
+                        renderTodos();
+                    })
+
+
+                    // klik esc untuk cancel 
+                    document.addEventListener('keydown', function (event) {
+                        if (event.key === 'Escape') {
+                            event.preventDefault()
+                            cancelBtn.click()
+                        }
+                    })
+
+                    // save manual 
+                    svBtn.addEventListener('click', function () {
+                        const newVal = input.value
+                        // const newDes = deskripsi.value
+                        if (confirm('Yakin todo ini di edit?')) {
+                            alert(" Todo berhasil di perbarui")
+                            if (!newVal) return
+                            const current = localStorage.getItem('todo')
+                            const listArr = current ? JSON.parse(current) : []
+                            listArr[idx] = newVal
+                            localStorage.setItem('todo', JSON.stringify(listArr));
+                            renderTodos()
+                        }
+                    })
+
+                    // klik enter untuk save 
+                    input.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            svBtn.click();
+                        }
+                    });
+
+
+                    cancelBtn.addEventListener('click', function () {
+                        renderTodos();
+                    })
+
+                    // Tambah input, tombol save, ketika edit di klik 
+
+                    li.innerHTML = '';
+                    li.appendChild(input)
+                    
+                    li.appendChild(svBtn)
+                    li.appendChild(cancelBtn)
+                    input.focus(); // bisa langsung isi ketika kita ingin mengetik 
+                })
+
+
+                // tombol delete 
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'delete'
+                deleteBtn.type = 'button'
+                deleteBtn.addEventListener('click', function () {
+                    if (confirm('Yakin ingin di hapus?')) {
+                        alert('todo berhasil di hapus')
+                        arr.splice(idx, 1)
+                        localStorage.setItem('todo', JSON.stringify(arr))
+                        renderTodos()
+                    }
+                })
+
+                li.appendChild(span)
+                // li.appendChild(sDeskrip)
+                li.appendChild(editBtn)
+                li.appendChild(deleteBtn)
+                todolist.appendChild(li)
+            });
+        }
+        renderTodos();
+    </script>
+</body>
+
+</html>
