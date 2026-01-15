@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <h1>TODO-LIST</h1>
     <form action="to-do list" id="form-todo">
         <input type="text" name="content" id="content" placeholder="nama kegiatan">
         <textarea type="text" name="deskripsi" id="deskripsi" placeholder="deskripsi kegiatan"></textarea>
@@ -58,7 +59,10 @@
                 const li = document.createElement('li')
         
                 const span = document.createElement('span')
-                span.textContent = t.value + " " + t.deskrip
+                span.textContent = t.value 
+
+                const descP = document.createElement('p')
+                descP.textContent = t.deskrip
 
                 //tombol edit 
                 const editBtn = document.createElement('button')
@@ -71,9 +75,9 @@
                     input.type = 'text'
                     input.value = t.value 
 
-                    const deskripsi = document.createElement('textarea')
-                    deskripsi.type = 'text'
-                    deskripsi.deskrip = t.deskrip
+                    const desInput = document.createElement('textarea')
+                    desInput.type = 'text'
+                    desInput.value = t.deskrip
 
 
                     // Tombol save button 
@@ -102,16 +106,18 @@
 
                     // save manual 
                     svBtn.addEventListener('click', function () {
-                        const newVal = input.value
-                        // const newDes = deskripsi.value
+                        const newVal = {value:input.value, deskrip:desInput.value}
                         if (confirm('Yakin todo ini di edit?')) {
-                            alert(" Todo berhasil di perbarui")
-                            if (!newVal) return
+                            console.log(newVal)
+                            if (newVal) {
                             const current = localStorage.getItem('todo')
                             const listArr = current ? JSON.parse(current) : []
-                            listArr[idx] = newVal
-                            localStorage.setItem('todo', JSON.stringify(listArr));
+
+                            listArr[idx] = newVal  
+                            localStorage.setItem('todo', JSON.stringify(listArr))
                             renderTodos()
+                            console.log(listArr)
+                            }
                         }
                     })
 
@@ -132,7 +138,7 @@
 
                     li.innerHTML = '';
                     li.appendChild(input)
-                    li.appendChild(deskripsi)
+                    li.appendChild(desInput)
                     li.appendChild(svBtn)
                     li.appendChild(cancelBtn)
                     input.focus(); // bisa langsung isi ketika kita ingin mengetik 
@@ -153,7 +159,7 @@
                 })
 
                 li.appendChild(span)
-                // li.appendChild(span)
+                li.appendChild(descP)
                 li.appendChild(editBtn)
                 li.appendChild(deleteBtn)
                 todolist.appendChild(li)
